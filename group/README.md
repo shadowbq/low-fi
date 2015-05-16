@@ -6,6 +6,8 @@ wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_do
 wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_put
 
 cd ~/.
+bundle install
+wget wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/Gemfile
 wget wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/.group.ini
 ```
 ## Edit the INI file.
