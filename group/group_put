@@ -6,7 +6,7 @@ require 'inifile'
 @sensors = ['']
 @non_sensors = ['']
 
-myini = IniFile.load('~/.group.ini')
+myini = IniFile.load("#{Dir.home}/.group.ini")
 
 myini.each do  |s,p,v|
   if s == 'sensors' 
