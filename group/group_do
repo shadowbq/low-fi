@@ -6,7 +6,7 @@ require 'inifile'
 @sensors = ['']
 @non_sensors = ['']
 
-myini = IniFile.load('./group.ini')
+myini = IniFile.load('~/.group.ini')
 
 myini.each do  |s,p,v|
   if s == 'sensors' 
@@ -25,7 +25,7 @@ options = {
 }
 
 optparse = OptionParser.new do |opts|
-  opts.banner = "Group Do (Version #{GROUP_DO_VERSION} )"  
+  opts.banner = "GROUP_DO (Version #{GROUP_DO_VERSION} )"  
   opts.separator " Usage: #$0 [options] "
   opts.separator " Note: Commands must be escaped."
   opts.separator ""    
