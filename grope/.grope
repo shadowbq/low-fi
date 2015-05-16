@@ -1,0 +1,10 @@
+{
+    "subgroup1": ["foo.host.com"],
+
+    "subgroup2": ["bar.host.com"],
+
+    "reach1": {
+        "hopi-tunnel.host.com": ["far.host.com", "away.host.com"]
+    }
+
+}

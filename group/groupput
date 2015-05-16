@@ -1,0 +1,99 @@
+#!/usr/bin/env ruby
+SPLK_VERSION = 1.0
+require 'optparse'
+require 'inifile'
+
+@sensors = ['']
+@non_sensors = ['']
+
+myini = IniFile.load('./group.ini')
+
+myini.each do  |s,p,v|
+  if s == 'sensors' 
+    @sensors << p  
+  else
+    @non_sensors << p
+  end
+
+end
+
+@servers = @sensors + @non_sensors
+@servers = @servers.sort.uniq
+
+options = {
+	:destination	=> "~/"
+}
+
+optparse = OptionParser.new do |opts|
+  opts.banner = "Splunker Put (Version #{SPLK_VERSION} )"  
+  opts.separator " Usage: #$0 [options] \"filename.txt\""
+  opts.separator " Note: Commands must be escaped."
+  opts.separator ""    
+  opts.separator " Splunk Actions:"    
+
+  opts.on( '-a', '--all', 'All Servers' ) do
+    options[:server] = @servers
+  end
+
+  opts.on( '-s', '--sensors', 'Sensors' ) do
+    options[:server] = @sensors
+  end
+ 
+ opts.separator ""
+   opts.separator " File Opertators:"
+
+   opts.on( '-D', '--destination=[val]', 'Destination Directory', "Default: #{options[:destination]}" ) do |directory|
+     options[:destination] = directory
+   end
+
+ opts.separator ""
+   opts.separator "  Global Options:"
+  
+   opts.on( '-x', '--root', 'Connect via root rather than current user' ) do
+     options[:root] = true
+   end
+
+   opts.on( '-z', '--sudo', 'Connect via current user and sudo' ) do
+     options[:sudo] = true
+   end
+
+   opts.on( '-v', '--verbose', 'Verbose Debugging Enabled' ) do
+     options[:verbose] = true
+   end
+  
+   opts.on_tail( '-h', '--help', 'Display this screen' ) do
+     puts opts
+     exit
+  end
+end
+
+#Verrify the options
+begin
+  raise unless ARGV.size > 0
+  optparse.parse!
+  
+#If options fail display help
+rescue
+  puts optparse
+  exit
+end
+
+file = ARGV[0]
+
+options[:server].each do |ip| 
+ puts "use server #{ip}" if options[:verbose]
+ if options[:root]
+   puts "scp -q #{file} root\@#{ip}:#{options[:destination]}" if options[:verbose]
+   puts `scp -q #{file} root\@#{ip}:#{options[:destination]}`
+ elsif options[:sudo]
+   puts "scp -q #{file} #{ip}:/tmp/. " if options[:verbose]
+   puts `scp -q #{file} #{ip}:/tmp/. `
+   puts "ssh -q #{ip} -t sudo \"sh -c 'mv -u /tmp/#{file} #{options[:destination]}'\"" if options[:verbose]
+   puts `ssh -q #{ip} -t sudo \"sh -c 'mv -u /tmp/#{file} #{options[:destination]}'\"`
+ else
+   puts "scp -q #{file} #{ip}:#{options[:destination]}" if options[:verbose]
+   puts `scp -q #{file} #{ip}:#{options[:destination]}`
+ end
+
+end
+
