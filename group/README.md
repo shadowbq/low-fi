@@ -5,8 +5,8 @@ This is not a gem or even a nice app.. its an 8-track
 ### Install Deps
 
 ```shell
-mkdir -p /tmp/foo && cd /tmp/foo
-wget wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/Gemfile
+$> mkdir -p /tmp/foo && cd /tmp/foo
+$> wget wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/Gemfile
 $> bundle install
 Fetching gem metadata from https://rubygems.org/..
 Fetching version metadata from https://rubygems.org/.
@@ -18,9 +18,9 @@ Use `bundle show [gemname]` to see where a bundled gem is installe
 ```
 ### Drop in the Bins
 ```shell
-mkdir -p /opt/bin && cd /opt/bin
-wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_do
-wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_put
+$> mkdir -p /opt/bin && cd /opt/bin
+$> wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_do
+$> wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_put
 ```
 
 ### Edit the INI file
@@ -28,15 +28,15 @@ wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/group_put
 Edit the `.group.ini` file to include the server and sensor sets.
 
 ```shell
-cd ~/.
-wget wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/.group.ini
-vi ~/.group.ini
+$> cd ~/.
+$> wget wget https://raw.githubusercontent.com/shadowbq/low-fi/master/group/.group.ini
+$> vi ~/.group.ini
 ```
 
 ## Extended Help
 
 ```shell
-$ /opt/bin/group_do --help
+$>  /opt/bin/group_do --help
 GROUP_DO (Version 1.0 )
  Usage: ./group_do [options] 
  Note: Commands must be escaped.
@@ -55,7 +55,7 @@ GROUP_DO (Version 1.0 )
 ## Example Run
 
 ```shell
-$ /opt/bin/group_do -s 'id'
+$>  /opt/bin/group_do -s 'id'
 uid=1002(macgregors) gid=1002(macgregors) groups=1002(macgregors),0(wheel)
 uid=1001(macgregors) gid=1001(macgregors) groups=1001(macgregors),0(wheel)
 uid=1002(macgregors) gid=1002(macgregors) groups=1002(macgregors),0(wheel)
@@ -65,7 +65,7 @@ uid=1001(macgregors) gid=1001(macgregors) groups=1001(macgregors),0(wheel)
 ## Example Run with `sudo` 
 
 ```shell
-$ /opt/bin/group_do -s -z 'id'
+$>  /opt/bin/group_do -s -z 'id'
 uid=0(root) gid=0(wheel) groups=0(wheel),5(operator)
 uid=0(root) gid=0(wheel) groups=0(wheel),5(operator)
 uid=0(root) gid=0(wheel) groups=0(wheel),5(operator)
