@@ -1,6 +1,6 @@
-## Install 
+## Install
 
-This is not a gem or even a nice app.. its an 8-track 
+This is not a gem or even a nice app.. its an 8-track
 
 ### Install Deps
 
@@ -37,7 +37,7 @@ $> vi ~/.group.ini
 
 ```shell
 $>  /opt/bin/group_do --help
-GROUP_DO (Version 1.0.1 )
+GROUP_DO (Version 1.0.2 )
  Usage: ./group_do [options] "[shell commands]"
  Note: [shell commands] must be escaped.
 
@@ -51,6 +51,8 @@ GROUP_DO (Version 1.0.1 )
     -z, --sudo                       Connect via current user and sudo
 
   Common Options:
+    -w, --wrapper                    force a shell wrapper
+    -b, --bash                       use bash login shell instead of simple sh for wrapper
         --skip-config-file           skip .ssh configuration file
     -v, --verbose                    Verbose Debugging Enabled
     -h, --help                       Display this screen
@@ -66,7 +68,7 @@ uid=1002(macgregors) gid=1002(macgregors) groups=1002(macgregors),0(wheel)
 uid=1001(macgregors) gid=1001(macgregors) groups=1001(macgregors),0(wheel)
 ```
 
-## Example Run with `sudo` 
+## Example Run with `sudo`
 
 ```shell
 $>  /opt/bin/group_do -s -z 'id'

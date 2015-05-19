@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-GROUP_DO_VERSION = '1.0.1'
+GROUP_DO_VERSION = '1.0.2'
 require 'optparse'
 require 'inifile'
 
@@ -9,7 +9,9 @@ require 'inifile'
 
 options = {
   :destination	=> "~/",
-  :skip	=> false
+  :skip	=> false,
+  :bash => false,
+  :wrapper => false
 }
 
 
@@ -68,6 +70,14 @@ optparse = OptionParser.new do |opts|
   opts.separator ""
   opts.separator "  Common Options:"
 
+  opts.on('-w', '--wrapper', 'force a shell wrapper') do
+    options[:wrapper]
+  end
+
+  opts.on( '-b', '--bash', 'use bash login shell instead of simple sh for wrapper') do
+    options[:bash]
+  end
+
   opts.on( '--skip-config-file', 'skip .ssh configuration file' ) do
     options[:skip]
   end
@@ -110,19 +120,40 @@ if options[:skip]
   skip = "-F /dev/null "
 end
 
+if options[:bash]
+  shell = "bash --login -c "
+  # Set wrapper as it is implied
+  options[:wrapper] = true
+else
+  shell = "sh -c "
+end
+
+
 ## Run __MAIN__
 
 options[:servers].each_with_index do |ip, index|
   puts "Server #{ip} (#{index+1}/#{options[:servers].length}):" if options[:verbose]
   if options[:root]
-    puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
-    puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+    if options[:wrapper]
+      puts "command: ssh #{skip}-q root\@#{ip} -t #{shell}'#{ARGV[0]}'" if options[:verbose]
+      puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+    else
+      puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
+      puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+    end
+
   elsif options[:sudo]
-    puts "command: ssh #{skip}-q #{ip} -t sudo sh -c '#{ARGV[0]}'" if options[:verbose]
-    puts `ssh #{skip}-q #{ip} -t sudo sh -c '#{ARGV[0]}'`
+    puts "command: ssh #{skip}-q #{ip} -t sudo #{shell}'#{ARGV[0]}'" if options[:verbose]
+    puts `ssh #{skip}-q #{ip} -t sudo #{shell}'#{ARGV[0]}'`
+
   elsif options[:interactive]
     puts "command: ssh #{skip}#{ip}" if options[:verbose]
     system ("ssh #{skip}#{ip}")
+
+  elsif options[:wrapper]
+    puts "command: ssh #{skip}-q #{ip} -t #{shell}'#{ARGV[0]}'" if options[:verbose]
+    puts `ssh #{skip}-q #{ip} -t #{shell}'#{ARGV[0]}'`
+
   else
     puts "command: ssh #{skip}-q #{ip} -t #{ARGV[0]}" if options[:verbose]
     puts `ssh #{skip}-q #{ip} -t #{ARGV[0]}`
