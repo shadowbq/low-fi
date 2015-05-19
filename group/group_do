@@ -8,24 +8,24 @@ require 'inifile'
 @non_sensors = []
 
 options = {
-	:destination	=> "~/",
-    :skip	=> false
+  :destination	=> "~/",
+  :skip	=> false
 }
 
 
 # Load INI File
 begin
-    myini = IniFile.load("#{Dir.home}/.group.ini")
-    myini.each do  |s,p,v|
-      if s == 'sensors'
-        @sensors << p
-      else
-        @non_sensors << p
-      end
-
+  myini = IniFile.load("#{Dir.home}/.group.ini")
+  myini.each do  |s,p,v|
+    if s == 'sensors'
+      @sensors << p
+    else
+      @non_sensors << p
     end
+
+  end
 rescue NoMethodError
-    abort ("#{Dir.home}/.group.ini file not found.")
+  abort ("#{Dir.home}/.group.ini file not found.")
 end
 
 # Build server list
@@ -50,35 +50,35 @@ optparse = OptionParser.new do |opts|
     options[:servers] = @sensors
   end
 
-   opts.separator ""
-   opts.separator "  Login Options (Select One):"
+  opts.separator ""
+  opts.separator "  Login Options (Select One):"
 
-   opts.on( '-i', '--interactive', 'Connect via subshell with current user' ) do
-     options[:interactive] = true
-   end
+  opts.on( '-i', '--interactive', 'Connect via subshell with current user' ) do
+    options[:interactive] = true
+  end
 
-   opts.on( '-x', '--root', 'Connect via root rather than current user' ) do
-     options[:root] = true
-   end
+  opts.on( '-x', '--root', 'Connect via root rather than current user' ) do
+    options[:root] = true
+  end
 
-   opts.on( '-z', '--sudo', 'Connect via current user and sudo' ) do
-     options[:sudo] = true
-   end
+  opts.on( '-z', '--sudo', 'Connect via current user and sudo' ) do
+    options[:sudo] = true
+  end
 
-   opts.separator ""
-   opts.separator "  Common Options:"
+  opts.separator ""
+  opts.separator "  Common Options:"
 
-   opts.on( '--skip-config-file', 'skip .ssh configuration file' ) do
-     options[:skip]
-   end
+  opts.on( '--skip-config-file', 'skip .ssh configuration file' ) do
+    options[:skip]
+  end
 
-   opts.on( '-v', '--verbose', 'Verbose Debugging Enabled' ) do
-     options[:verbose] = true
-   end
+  opts.on( '-v', '--verbose', 'Verbose Debugging Enabled' ) do
+    options[:verbose] = true
+  end
 
-   opts.on_tail( '-h', '--help', 'Display this screen' ) do
-     puts opts
-     exit
+  opts.on_tail( '-h', '--help', 'Display this screen' ) do
+    puts opts
+    exit
   end
 end
 
@@ -88,11 +88,11 @@ begin
   optparse.parse!
   exclusive_options = [:interactive, :root, :sudo]
   if (exclusive_options.collect { |item| item if options.include? item }.compact).length > 1
-     puts "Error: Mutually Exclusive options were selected"
-     puts optparse
-     exit
-   end
-# If options fail display help
+    puts "Error: Mutually Exclusive options were selected"
+    puts optparse
+    exit
+  end
+  # If options fail display help
 rescue
   puts optparse
   exit
@@ -113,19 +113,19 @@ end
 ## Run __MAIN__
 
 options[:servers].each_with_index do |ip, index|
- puts "Server #{ip} (#{index+1}/#{options[:servers].length}):" if options[:verbose]
- if options[:root]
-   puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
-   puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
- elsif options[:sudo]
-   puts "command: ssh #{skip}-q #{ip} -t sudo sh -c '#{ARGV[0]}'" if options[:verbose]
-   puts `ssh #{skip}-q #{ip} -t sudo sh -c '#{ARGV[0]}'`
- elsif options[:interactive]
-   puts "command: ssh #{skip}#{ip}" if options[:verbose]
-   system ("ssh #{skip}#{ip}")
- else
-   puts "command: ssh #{skip}-q #{ip} -t #{ARGV[0]}" if options[:verbose]
-   puts `ssh #{skip}-q #{ip} -t #{ARGV[0]}`
- end
+  puts "Server #{ip} (#{index+1}/#{options[:servers].length}):" if options[:verbose]
+  if options[:root]
+    puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
+    puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+  elsif options[:sudo]
+    puts "command: ssh #{skip}-q #{ip} -t sudo sh -c '#{ARGV[0]}'" if options[:verbose]
+    puts `ssh #{skip}-q #{ip} -t sudo sh -c '#{ARGV[0]}'`
+  elsif options[:interactive]
+    puts "command: ssh #{skip}#{ip}" if options[:verbose]
+    system ("ssh #{skip}#{ip}")
+  else
+    puts "command: ssh #{skip}-q #{ip} -t #{ARGV[0]}" if options[:verbose]
+    puts `ssh #{skip}-q #{ip} -t #{ARGV[0]}`
+  end
 
 end
