@@ -37,17 +37,21 @@ $> vi ~/.group.ini
 
 ```shell
 $>  /opt/bin/group_do --help
-GROUP_DO (Version 1.0 )
- Usage: ./group_do [options] 
- Note: Commands must be escaped.
+GROUP_DO (Version 1.0.1 )
+ Usage: ./group_do [options] "[shell commands]"
+ Note: [shell commands] must be escaped.
 
- Server List:
-    -a, --all                        All Servers
+  Server List:
+    -a, --all                        All Servers (default if none selected)
     -s, --sensors                    Sensors
 
-  Global Options:
+  Login Options (Select One):
+    -i, --interactive                Connect via subshell with current user
     -x, --root                       Connect via root rather than current user
     -z, --sudo                       Connect via current user and sudo
+
+  Common Options:
+        --skip-config-file           skip .ssh configuration file
     -v, --verbose                    Verbose Debugging Enabled
     -h, --help                       Display this screen
 ```
