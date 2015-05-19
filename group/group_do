@@ -112,8 +112,8 @@ end
 
 ## Run __MAIN__
 
-options[:servers].each do |ip|
- puts "Server #{ip}:" if options[:verbose]
+options[:servers].each_with_index do |ip, index|
+ puts "Server #{ip} (#{index+1}/#{options[:servers].length}):" if options[:verbose]
  if options[:root]
    puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
    puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
