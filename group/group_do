@@ -67,6 +67,10 @@ optparse = OptionParser.new do |opts|
     options[:sudo] = true
   end
 
+  opts.on('-N', '--nothing', 'Do nothing only list the servers selected') do
+    options[:nothing] = true
+  end
+
   opts.separator ""
   opts.separator "  Common Options:"
 
@@ -133,30 +137,31 @@ end
 
 options[:servers].each_with_index do |ip, index|
   puts "Server #{ip} (#{index+1}/#{options[:servers].length}):" if options[:verbose]
-  if options[:root]
-    if options[:wrapper]
-      puts "command: ssh #{skip}-q root\@#{ip} -t #{shell}'#{ARGV[0]}'" if options[:verbose]
-      puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+  if options[:nothing] !=true
+    if options[:root]
+      if options[:wrapper]
+        puts "command: ssh #{skip}-q root\@#{ip} -t #{shell}'#{ARGV[0]}'" if options[:verbose]
+        puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+      else
+        puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
+        puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+      end
+
+    elsif options[:sudo]
+      puts "command: ssh #{skip}-q #{ip} -t sudo #{shell}'#{ARGV[0]}'" if options[:verbose]
+      puts `ssh #{skip}-q #{ip} -t sudo #{shell}'#{ARGV[0]}'`
+
+    elsif options[:interactive]
+      puts "command: ssh #{skip}#{ip}" if options[:verbose]
+      system ("ssh #{skip}#{ip}")
+
+    elsif options[:wrapper]
+      puts "command: ssh #{skip}-q #{ip} -t #{shell}'#{ARGV[0]}'" if options[:verbose]
+      puts `ssh #{skip}-q #{ip} -t #{shell}'#{ARGV[0]}'`
+
     else
-      puts "command: ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}" if options[:verbose]
-      puts `ssh #{skip}-q root\@#{ip} -t #{ARGV[0]}`
+      puts "command: ssh #{skip}-q #{ip} -t #{ARGV[0]}" if options[:verbose]
+      puts `ssh #{skip}-q #{ip} -t #{ARGV[0]}`
     end
-
-  elsif options[:sudo]
-    puts "command: ssh #{skip}-q #{ip} -t sudo #{shell}'#{ARGV[0]}'" if options[:verbose]
-    puts `ssh #{skip}-q #{ip} -t sudo #{shell}'#{ARGV[0]}'`
-
-  elsif options[:interactive]
-    puts "command: ssh #{skip}#{ip}" if options[:verbose]
-    system ("ssh #{skip}#{ip}")
-
-  elsif options[:wrapper]
-    puts "command: ssh #{skip}-q #{ip} -t #{shell}'#{ARGV[0]}'" if options[:verbose]
-    puts `ssh #{skip}-q #{ip} -t #{shell}'#{ARGV[0]}'`
-
-  else
-    puts "command: ssh #{skip}-q #{ip} -t #{ARGV[0]}" if options[:verbose]
-    puts `ssh #{skip}-q #{ip} -t #{ARGV[0]}`
   end
-
 end
